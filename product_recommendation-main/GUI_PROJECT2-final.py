@@ -395,7 +395,52 @@ elif choice == 'Hệ thống gợi ý':
             st.write(f"### Khách hàng đã chọn: {customer_name}")
             recommendations = recommendation_by_user(user_id, df, df_products, algorithm_loaded)
             display_recommended_products(recommendations)
+        st.subheader("🔍 Gợi ý sản phẩm tương tự")
 
+        # Danh sách sản phẩm để người dùng chọn
+        product_options = [(row['ten_san_pham'], row['ma_san_pham']) for _, row in limited_products.iterrows()]
+        selected_product = st.selectbox(
+            "Chọn sản phẩm:",
+            options=product_options,
+            format_func=lambda x: x[0],  # Hiển thị tên sản phẩm trong selectbox
+            key=f"product_selectbox_{user_id}"  # Unique key for product selectbox per user
+        )
+
+        if selected_product:
+            # Lấy thông tin sản phẩm đã chọn
+            ma_san_pham = selected_product[1]
+            selected_product_row = df_products[df_products['ma_san_pham'] == ma_san_pham].iloc[0]
+            gia_ban_formatted = f"{selected_product_row['gia_ban']:,.0f}".replace(",", ".")
+            gia_goc_formatted = f"{selected_product_row['gia_goc']:,.0f}".replace(",", ".")
+            
+            # Hiển thị thông tin sản phẩm đã chọn
+            st.write("### Bạn đã chọn:")
+            st.write(f"**Tên sản phẩm:** {selected_product_row['ten_san_pham']}")
+            st.write(f"**Giá bán:** {gia_ban_formatted} VND")
+            st.write(f"**Giá gốc:** {gia_goc_formatted} VND")
+            
+            # Hiển thị hình ảnh sản phẩm
+            product_image = df_hinh[df_hinh['ma_san_pham'] == selected_product_row['ma_san_pham']]['hinh_anh'].values
+
+            if len(product_image) > 0 and pd.notna(product_image[0]):
+                image_path = product_image[0]
+                
+                # Kiểm tra định dạng ảnh
+                if image_path.lower().endswith(('png', 'jpg', 'jpeg')):
+                    st.image(image_path, use_container_width=True)  # Hiển thị ảnh
+                else:
+                    st.write("**Định dạng ảnh không hợp lệ.**")
+            else:
+                st.write("**Không có ảnh sản phẩm**")
+            
+            # Lấy gợi ý sản phẩm tương tự sử dụng recommendation_by_product
+            recommendations = recommendation_by_product(ma_san_pham, df, df_products, algorithm_loaded, top_n=5)
+            
+            if not recommendations.empty:
+                st.write("### Các sản phẩm tương tự:")
+                display_recommended_products(recommendations, cols=3)  # Hiển thị các sản phẩm tương tự với hình ảnh
+            else:
+                st.write("Không tìm thấy sản phẩm tương tự.")   
 
             
 elif choice == 'Admin':

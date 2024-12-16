@@ -85,18 +85,18 @@ def recommendation_by_product(productId, df, df_products, algorithm, top_n=5):
     return df_score_with_images.head(top_n)
 
 # Tải dữ liệu
-df_hinh = pd.read_csv('/mount/src/recommendation_system/product_recommendation-main/hinh_anh.csv')
-df_products = pd.read_csv('/mount/src/recommendation_system/product_recommendation-main/San_pham_2xuly.csv')
-df_customers = pd.read_csv('/mount/src/recommendation_system/product_recommendation-main/Khach_hang_2xuly.csv')
-df = pd.read_csv('/mount/src/recommendation_system/product_recommendation-main/Danh_gia_final.csv')
+df_hinh = pd.read_csv('/mount/src/recommendation_project/product_recommendation-main/hinh_anh.csv')
+df_products = pd.read_csv('/mount/src/recommendation_project/product_recommendation-main/San_pham_2xuly.csv')
+df_customers = pd.read_csv('/mount/src/recommendation_project/product_recommendation-main/Khach_hang_2xuly.csv')
+df = pd.read_csv('/mount/src/recommendation_project/product_recommendation-main/Danh_gia_final.csv')
 df['sentiment'] = df['so_sao'].apply(lambda x: 'positive' if x >= 3 else 'negative')
-df_reviews = pd.read_csv('/mount/src/recommendation_system/product_recommendation-main/Danh_gia_final2.csv')
+df_reviews = pd.read_csv('/mount/src/recommendation_project/product_recommendation-main/Danh_gia_final2.csv')
 
 
 # Tải mô hình
-with open('/mount/src/recommendation_system/product_recommendation-main/product_surprise.pkl', 'rb') as f:
+with open('/mount/src/recommendation_project/product_recommendation-main/product_surprise.pkl', 'rb') as f:
     algorithm_loaded = pickle.load(f)
-with open('/mount/src/recommendation_system/product_recommendation-main/products_cosine_sim.pkl', 'rb') as f:
+with open('/mount/src/recommendation_project/product_recommendation-main/products_cosine_sim.pkl', 'rb') as f:
     cosine_sim_new = pickle.load(f)
 
 limited_products = df_products.head(20)
@@ -104,7 +104,7 @@ limited_customers = df_customers.head(20)
 
 # Giao diện với Streamlit
 # Tiêu đề trang
-st.image('/mount/src/recommendation_system/product_recommendation-main/hasaki1.jpg', use_container_width=True)
+st.image('/mount/src/recommendation_project/product_recommendation-main/hasaki1.jpg', use_container_width=True)
 st.title("💎 Hệ thống gợi ý sản phẩm Recommender System 💎")
 
 # Menu ở sidebar
@@ -131,18 +131,18 @@ if choice == 'Business Objective':
 
     Cả hai thuật toán này sẽ giúp hệ thống đưa ra những gợi ý chính xác và cá nhân hóa cho mỗi khách hàng, đồng thời giúp HASAKI.VN tối ưu hóa việc phân phối sản phẩm và tăng trưởng doanh thu.
 """)  
-    st.image("/mount/src/recommendation_system/product_recommendation-main/2.png")
+    st.image("/mount/src/recommendation_project/product_recommendation-main/2.png")
 
 elif choice == 'Hiển thị chart':
     st.subheader("Biểu đồ Heatmap")
     st.write("Lấy một phần nhỏ trong Cosine_sim, tương ứng với ma trận 18 x18. Gồm các giá trị liên quan đến 18 sản phẩm đầu tiên trong danh sách để trực quan hoá")
-    st.image('/mount/src/recommendation_system/product_recommendation-main/heatmap.png', use_container_width=True)
+    st.image('/mount/src/recommendation_project/product_recommendation-main/heatmap.png', use_container_width=True)
 
 elif choice == 'Build Project':
     st.subheader("Build Project")
 
     # Ở đây sẽ hiển thị phần nội dung của Build Project
-    st.image('/mount/src/recommendation_system/product_recommendation-main/thuat_toan.jpg', use_container_width=True)  # Hiển thị ảnh banner
+    st.image('/mount/src/recommendation_project/product_recommendation-main/thuat_toan.jpg', use_container_width=True)  # Hiển thị ảnh banner
     st.write("### Recommendation System")
     st.write(""" 
     Hệ thống gợi ý tại Hasaki.vn được xây dựng dựa trên hai phương pháp chính:
@@ -158,10 +158,10 @@ elif choice == 'Build Project':
         st.write("Bạn đã chọn **Content-Based Filtering**.")
         st.subheader("Thuật toán dùng trong Content-based")
         st.write("""Gensim""")
-        st.image("/mount/src/recommendation_system/product_recommendation-main/1.png")
+        st.image("/mount/src/recommendation_project/product_recommendation-main/1.png")
         st.write("""Cosine_similarity""")
-        st.image("/mount/src/recommendation_system/product_recommendation-main/3.png")
-        st.image("/mount/src/recommendation_system/product_recommendation-main/5.png")
+        st.image("/mount/src/recommendation_project/product_recommendation-main/3.png")
+        st.image("/mount/src/recommendation_project/product_recommendation-main/5.png")
 
     with tab2:
          st.subheader("Collaborative Filtering - KNNBaseline vs ALS")
